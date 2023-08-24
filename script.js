@@ -1,6 +1,9 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
 //fill rect
 // ctx.fillStyle='red';
 // ctx.fillRect(20,20,150,150);
@@ -61,39 +64,90 @@ const ctx = canvas.getContext("2d");
 // ctx.stroke();
 
 //Animation
-const circle = {
-  x: 200,
-  y: 200,
-  size: 30, //radius of the circle
-  dx: 5, //dx and dy are the increments that we wouldl like to have in the movement of x and y axis
-  dy: 4,
+// const circle = {
+//   x: 200,
+//   y: 200,
+//   size: 30, //radius of the circle
+//   dx: 5, //dx and dy are the increments that we wouldl like to have in the movement of x and y axis
+//   dy: 4,
+// };
+
+// function drawCircle() {
+//   ctx.beginPath();
+//   ctx.arc(circle.x, circle.y, circle.size, 0, Math.PI * 2, true);
+//   ctx.fillStyle = "purple";
+//   ctx.fill();
+// }
+
+// function update() {
+//   ctx.clearRect(0, 0, canvas.width, canvas.height);
+//   drawCircle();
+//   circle.x += circle.dx;
+//   circle.y+=circle.dy;
+// //detect collision/side walls
+// if(circle.x>canvas.width||circle.x-circle.size<0){
+//     circle.dx*=-1;
+// }
+
+// //detect top and bottom wall
+// if(circle.y>canvas.height || circle.y-circle.size<0){
+//     circle.dy*=-1;
+// }
+
+//   requestAnimationFrame(update);
+
+// }
+
+// // drawCircle();
+// update();
+
+const mouse = {
+  x: undefined,
+  y: undefined,
 };
 
-function drawCircle() {
-  ctx.beginPath();
-  ctx.arc(circle.x, circle.y, circle.size, 0, Math.PI * 2, true);
-  ctx.fillStyle = "purple";
-  ctx.fill();
+// function drawCircle() {
+//   ctx.fillStyle = "blue";
+//   ctx.beginPath();
+//   ctx.arc(mouse.x, mouse.y, 50, 0, Math.PI * 2, true);
+//   ctx.fill();
+// }
+
+canvas.addEventListener("click", function (event) {
+  mouse.x = event.x;
+  mouse.y = event.y;
+  // drawCircle();
+});
+
+canvas.addEventListener("mousemove", function (event) {
+  mouse.x = event.x;
+  mouse.y = event.y;
+  // drawCircle();
+});
+
+class Particle {
+  constructor() {
+    this.x = mouse.x;
+    this.y = mouse.y;
+    this.size = Math.random() * 5 + 1;
+    this.speedX = Math.random() * 3 - 1.5;
+    this.speedY = Math.random() * 3 - 1.5;
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+  }
+  draw() {
+    ctx.fillStyle = "blue";
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 50, 0, Math.PI * 2, true);
+    ctx.fill();
+  }
 }
 
-function update() {
+function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawCircle();
-  circle.x += circle.dx;
-  circle.y+=circle.dy;
-//detect collision/side walls
-if(circle.x>canvas.width||circle.x-circle.size<0){
-    circle.dx*=-1;
+  requestAnimationFrame(animate);
 }
-
-//detect top and bottom wall
-if(circle.y>canvas.height || circle.y-circle.size<0){
-    circle.dy*=-1;
-}
-
-  requestAnimationFrame(update);
-
-}
-
-// drawCircle();
-update();
+animate();
